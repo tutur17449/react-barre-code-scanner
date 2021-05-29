@@ -1,8 +1,19 @@
 import Quagga from "quagga";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
 
 export default function Scanner({ barreCode, setBarreCode }) {
+  const [currentDevice, setCurrentDevice] = useState("user");
+
+  const onHandleChange = (e) => {
+    setCurrentDevice(e.target.value);
+  };
+
   useEffect(() => {
     Quagga.init(
       {
@@ -10,10 +21,10 @@ export default function Scanner({ barreCode, setBarreCode }) {
           name: "Live",
           type: "LiveStream",
           constraints: {
-            width: "790",
-            height: "490",
-            facingMode: "environment",
-            deviceId: "7832475934759384534",
+            width: "640",
+            height: "480",
+            facingMode: currentDevice,
+            aspectRatio: { min: 1, max: 2 },
           },
           numberOfWorkers: navigator.hardwareConcurrency,
           frequency: 10,
@@ -129,6 +140,22 @@ export default function Scanner({ barreCode, setBarreCode }) {
           style={{ position: "absolute", top: 0, left: 0, width: "100%" }}
         ></canvas>
       </div>
+      <FormControl component="fieldset" style={{ marginTop: "1.5rem" }}>
+        <FormLabel component="legend">Switch camera</FormLabel>
+        <RadioGroup
+          aria-label="devices"
+          name="devices"
+          value={currentDevice}
+          onChange={onHandleChange}
+        >
+          <FormControlLabel
+            value="environment"
+            control={<Radio />}
+            label="Back"
+          />
+          <FormControlLabel value="user" control={<Radio />} label="Front" />
+        </RadioGroup>
+      </FormControl>
     </>
   );
 }
