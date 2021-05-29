@@ -129,7 +129,7 @@ export default function Scanner({ barreCode, setBarreCode }) {
       Quagga.offProcessed();
       Quagga.offDetected();
     };
-  }, []);
+  }, [currentDevice]);
 
   return (
     <>
